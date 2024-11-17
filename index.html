@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Snacks</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(to right, #f8f9fa, #e0f7fa);
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 20px;
+            background-color: #2c3e50;
+        }
+
+        .header img {
+            height: 60px;
+            margin-right: 15px;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 1.8em;
+        }
+
+        .carousel-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 100%;
+        }
+
+        .carousel img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        .item {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 20px;
+        }
+
+        .item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 3px solid #eaeaea;
+        }
+
+        .item h2 {
+            font-size: 1.5em;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .item p {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .quantity button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .quantity button:hover {
+            background-color: #219150;
+        }
+
+        .quantity input {
+            width: 50px;
+            font-size: 1em;
+            text-align: center;
+            margin: 0 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            text-align: center;
+            display: inline-block;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        .checkout-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .checkout-toggle:hover {
+            background-color: #219150;
+            transform: scale(1.1);
+        }
+
+        .checkout-toggle span {
+            margin-right: 8px;
+        }
+
+        /* Checkout Card Styles */
+        .checkout-card {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 80%;
+            max-width: 900px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .checkout-card h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .checkout-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .checkout-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .checkout-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+
+        .item-quantity {
+            display: flex;
+            align-items: center;
+        }
+
+        .item-quantity button {
+            padding: 8px;
+            font-size: 1.2em;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .item-quantity input {
+            width: 40px;
+            text-align: center;
+            margin: 0 10px;
+            font-size: 1.2em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .checkout-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .checkout-actions button {
+            padding: 12px 30px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        .checkout-actions .pay-button {
+            background-color: #27ae60;
+        }
+
+        .checkout-actions button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="logo.png" alt="Cinema Snacks Logo">
+        <h1>Cinema Snacks</h1>
+    </div>
+
+    <div class="carousel-container">
+        <div class="carousel" id="carousel">
+            <img src="movie1.jpg" alt="Upcoming Movie 1">
+            <img src="movie2.jpg" alt="Upcoming Movie 2">
+            <img src="offer1.jpg" alt="Special Offer">
+        </div>
+    </div>
+
+    <section class="menu">
+        <div class="item">
+            <img src="popcorn.jpg" alt="Popcorn">
+            <h2>Popcorn</h2>
+            <p>₹200.00</p>
+            <div class="quantity">
+                <button onclick="changeQuantity('popcorn', -1)">-</button>
+                <input type="text" id="popcorn-quantity" value="0" readonly>
+                <button onclick="changeQuantity('popcorn', 1)">+</button>
+            </div>
+            <button class="button" onclick="addToCart('Popcorn', 200)">Add to Cart</button>
+        </div>
+        <div class="item">
+            <img src="soda.jpg" alt="Soda">
+            <h2>Soft Drinks</h2>
+            <p>₹100.00</p>
+            <div class="quantity">
+                <button onclick="changeQuantity('soft-drinks', -1)">-</button>
+                <input type="text" id="soft-drinks-quantity" value="0" readonly>
+                <button onclick="changeQuantity('soft-drinks', 1)">+</button>
+            </div>
+            <button class="button" onclick="addToCart('Soft Drinks', 100)">Add to Cart</button>
+        </div>
+        <div class="item">
+            <img src="nachos.jpg" alt="Nachos">
+            <h2>Nachos</h2>
+            <p>₹150.00</p>
+            <div class="quantity">
+                <button onclick="changeQuantity('nachos', -1)">-</button>
+                <input type="text" id="nachos-quantity" value="0" readonly>
+                <button onclick="changeQuantity('nachos', 1)">+</button>
+            </div>
+            <button class="button" onclick="addToCart('Nachos', 150)">Add to Cart</button>
+        </div>
+    </section>
+
+    <div class="checkout-toggle" onclick="checkout()">
+        <span id="cart-count">0</span>
+        🛒
+    </div>
+
+    <!-- Checkout Card -->
+    <div class="checkout-card" id="checkout-card">
+        <h2>Your Cart</h2>
+        <div class="checkout-items" id="checkout-items"></div>
+        <div class="checkout-actions">
+            <button onclick="closeCheckout()">Close</button>
+            <button class="pay-button" id="pay-button" onclick="makePayment()">Make Payment ₹0</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = {};
+
+        function changeQuantity(item, change) {
+            const quantityInput = document.getElementById(`${item}-quantity`);
+            let currentQuantity = parseInt(quantityInput.value);
+            currentQuantity = Math.max(0, currentQuantity + change);
+            quantityInput.value = currentQuantity;
+        }
+
+        function addToCart(itemName, price) {
+            const quantityInput = document.getElementById(`${itemName.toLowerCase().replace(' ', '-')}-quantity`);
+            const quantity = parseInt(quantityInput.value);
+            if (quantity > 0) {
+                if (cart[itemName]) {
+                    cart[itemName].quantity += quantity;
+                } else {
+                    cart[itemName] = { price, quantity };
+                }
+                updateCartCount();
+                quantityInput.value = 0;
+            }
+        }
+
+        function updateCartCount() {
+            let itemCount = 0;
+            for (let item in cart) {
+                itemCount += cart[item].quantity;
+            }
+            document.getElementById('cart-count').innerText = itemCount;
+        }
+
+        function checkout() {
+            if (Object.keys(cart).length > 0) {
+                document.getElementById('checkout-card').style.display = 'block';
+                updateCheckoutCard();
+            } else {
+                alert("Your cart is empty. Add items before checking out.");
+            }
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkout-card').style.display = 'none';
+        }
+
+        function updateCheckoutCard() {
+            const checkoutItems = document.getElementById('checkout-items');
+            checkoutItems.innerHTML = '';
+            let totalAmount = 0;
+            for (let item in cart) {
+                const checkoutItem = document.createElement('div');
+                checkoutItem.classList.add('checkout-item');
+                checkoutItem.innerHTML = `
+                    <img src="${item.toLowerCase().replace(' ', '-')}.jpg" alt="${item}">
+                    <div>
+                        <h3>${item}</h3>
+                        <p>₹${cart[item].price}</p>
+                    </div>
+                    <div class="item-quantity">
+                        <button onclick="updateCartItem('${item}', -1)">-</button>
+                        <input type="text" value="${cart[item].quantity}" readonly>
+                        <button onclick="updateCartItem('${item}', 1)">+</button>
+                    </div>
+                `;
+                checkoutItems.appendChild(checkoutItem);
+
+                // Calculate total amount
+                totalAmount += cart[item].price * cart[item].quantity;
+            }
+
+            // Update total amount on the "Make Payment" button
+            document.getElementById('pay-button').innerText = `Make Payment ₹${totalAmount}`;
+        }
+
+        function updateCartItem(itemName, change) {
+            if (cart[itemName]) {
+                cart[itemName].quantity = Math.max(0, cart[itemName].quantity + change);
+                updateCheckoutCard();
+                updateCartCount();
+            }
+        }
+
+        function makePayment() {
+            const totalAmount = calculateTotalAmount();
+            alert(`Proceeding to payment for ₹${totalAmount}`);
+        }
+
+        function calculateTotalAmount() {
+            let totalAmount = 0;
+            for (let item in cart) {
+                totalAmount += cart[item].price * cart[item].quantity;
+            }
+            return totalAmount;
+        }
+    </script>
+</body>
+</html>
